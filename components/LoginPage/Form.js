@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-// import { userContext } from '../../App';
+import { userContext } from '../../App';
 import {
   Modal,
   Portal,
@@ -33,7 +32,7 @@ const signInValidationSchema = yup.object().shape({
 });
 
 const Form = () => {
-  // const [loggedUser, setLoggedUser] = useContext(userContext);
+  const [loggedUser, setLoggedUser] = useContext(userContext);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(false);
   const [netStatus, setNetStatus] = useState(true);
@@ -47,26 +46,28 @@ const Form = () => {
   },[])
   
 
-  const handleEmailPassSignIn = userInfo => {
-    // NetInfo.addEventListener(networkState => {
-    //   setNetStatus(networkState.isConnected)
-    // });
-    // console.log(netStatus)
-    // setVisible(true);
-    // fetch('https://intense-ridge-49211.herokuapp.com/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(userInfo),
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setLoggedUser(data);
-    //     setError(data.message);
-    //     setVisible(false);
+  const handleEmailPassSignIn = async userInfo => {
+    console.log("coming")
+    NetInfo.addEventListener(networkState => {
+      setNetStatus(networkState.isConnected)
+    });
+    console.log(netStatus)
+    setVisible(true);
+    await fetch('http://localhost:8085/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userInfo),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("from login---> ", data)
+        setLoggedUser({...data.info,...loggedUser,isLogged:true});
+        setError(data.message);
+        setVisible(false);
 
-    //   })
-    //   .catch(err => {   
-    //   })
+      })
+      .catch(err => {   
+      })
   };
 
   return (
@@ -120,7 +121,7 @@ const Form = () => {
               <Button disabled={!isValid} mode="contained" onPress={handleSubmit}> Sign in </Button>
             </View>
             {
-              error.length > 0 && <Text>{error}</Text>
+              error.length > 0 && <Text style={{ textAlign: 'center'}}>{error}</Text>
             }
           </>
         )}

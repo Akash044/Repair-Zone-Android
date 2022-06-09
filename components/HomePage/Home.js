@@ -1,32 +1,62 @@
 import { StyleSheet, View, ScrollView } from 'react-native'
-import { RadioButton, Text, Button, Avatar, Card, Title, Paragraph,TouchableRipple} from 'react-native-paper';
-import React, { useState } from 'react'
+import { RadioButton, Text, Button, Avatar, Searchbar } from 'react-native-paper';
+import React, { useState ,useEffect} from 'react'
 import { dummyData } from '../assets/dummyData';
 import EachCard from './EachCard';
+import CustomBottomNavBar from '../screens/CustomBottomNavBar';
 
 const Home = () => {
   const [value, setValue] = useState('first');
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState(false);
-  const [selectedItem, setSelectedItem] = useState({})
-  console.log(dummyData)
-  const [dummyItems, setDummyItems] = useState(dummyData)
+  const [selectedItems, setSelectedItems] = useState({})
+  const [searchResult, setSearchResult] = useState({});
+  // console.log(dummyData)
+  const [dummyItems, setDummyItems] = useState([])
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onChangeSearch = query => {
+    setSearchQuery(query)
+    console.log(query)
+    const searchText = query.toLowerCase();
+    const matchedItems = selectedItems.filter(item =>{
+      const itemName = item.name.toLowerCase();
+      return itemName.indexOf(searchText) > -1;
+    })
+    console.log(matchedItems)
+    setSearchResult(matchedItems);
+  };
+
+  useEffect(() => {
+       setDummyItems(dummyData)
+  },[])
+  
 
   const handleSelectionOption = (option) => {
+    
+
+    const selectedCat = dummyItems.filter((item) => item.category == option);
+    setSelectedItems(selectedCat[0].items)
+    setSearchResult(selectedCat[0].items)
+
     setValue(option);
     setShow(false)
     setSelected(true)
 
-    const selectedCat = dummyItems.filter((item) => item.category == option);
-    console.log(selectedCat)
-    setSelectedItem(selectedCat[0])
-
   }
   return (<>
-    <Button mode="outlined" onPress={() => setShow(true)}>{
+   <View style={{ flexDirection: "row", alignItems: "center" }}>
+   <Button mode="outlined" onPress={() => setShow(true)}>{
       !selected ? "Select option" : value
     }
     </Button>
+    {selectedItems.length && <Searchbar
+      placeholder="Search"
+      onChangeText={onChangeSearch}
+      value={searchQuery}
+    />}
+   </View>
     {
       show &&
       <ScrollView style={{ elevation: 2, borderRadius: 10, padding: 10 }}>
@@ -138,7 +168,7 @@ const Home = () => {
     }
     <ScrollView>
 
-      {selected && selectedItem.items.map((value, index) =>
+      {selected && searchResult.map((value, index) =>
 
         <EachCard key={index}  data={value} />
         // <View key={index} style={{ width: "47%", height: "40%", padding: 5, borderWidth: 1, margin: 5, borderRadius: 8 }}>
@@ -149,6 +179,7 @@ const Home = () => {
         // </View>
       )}
     </ScrollView>
+    {/* <CustomBottomNavBar /> */}
   </>
 
   )

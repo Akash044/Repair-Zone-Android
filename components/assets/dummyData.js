@@ -3,6 +3,7 @@ export const dummyData = [{
     items: [{
       name: 'Repair AC Running Constantly Problem',
       cause: "This is one of the most common AC issues, and it can have multiple causes. You may have a problem with the thermostat, compressor, air filters, or electrical parts.",
+      symptoms:"",
       price: 100,
     },
     {

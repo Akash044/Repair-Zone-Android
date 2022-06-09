@@ -1,17 +1,26 @@
 import React, { useContext, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Modal,
+  Portal,
+  Text,
+  Provider,
+  ActivityIndicator,
+  Colors,
+  TextInput, Button 
+} from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 // import { Picker } from '@react-native-community/picker';
-// import { Image } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-// import { userContext } from '../../App';
+import { userContext } from '../../App';
+
 
 const signUpValidationSchema = yup.object().shape({
   name: yup.string().required('User name is Required'),
   //   roll: yup.string().min(7).max(7).required('User roll is Required'),
-  contactNo: yup.string().matches(/(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/, 'Must follow bd number pattern').required('User name is Required'),
+  contact: yup.string().matches(/(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/, 'Must follow bd number pattern').required('Contact number is Required'),
   email: yup
     .string()
     .matches(
@@ -31,20 +40,11 @@ const signUpValidationSchema = yup.object().shape({
     .required('Confirm password is required'),
 });
 
-const RegForm = ({ route }) => {
-  //   const { roomNo, id } = route.params;
+const RegForm = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useContext(userContext);
   const [imageData, setImageData] = useState({});
-  const [deptSec, setDeptSec] = useState({
-    dept: 'CSE',
-    sec: 'A'
-
-  });
+  const [isLoading, setIsLoading] = useState(false)
   const [takenImg, setTakenImg] = useState(false)
-  //   const [loggedUser, setLoggedUser] = useContext(userContext);
-
-  const handlePickerField = value => {
-    // setDeptSec({ ...deptSec, ...value });
-  };
 
   const updateRoomVacantStatus = () => {
     // fetch('https://intense-ridge-49211.herokuapp.com/bookedRoom', {
@@ -60,16 +60,22 @@ const RegForm = ({ route }) => {
   }
 
   const handleRegisterBtn = values => {
-    const info = { ...values, ...deptSec }
-    fetch('https://intense-ridge-49211.herokuapp.com/addBoarder', {
+    console.log(values);
+    //  navigation.navigate('OTPPage', {})
+    setIsLoading(true)
+    fetch('http://localhost:8085/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...info, ...imageData }),
+      body: JSON.stringify({ ...values, ...imageData , admin:false}),
     })
       .then(res => res.json())
       .then(data => {
-        data && alert('boarder info added successfully');
-        data && updateRoomVacantStatus();
+        console.log(data)
+        setUserInfo({ ...values, ...imageData })
+        data && alert('OTP has been sent in your email, please verify');
+        setIsLoading(false)
+        data && navigation.navigate('OTPPage');
+        !data && alert('This email has already used.Please try with a new one!');
 
       })
       .catch(err => { console.log(err) })
@@ -96,16 +102,14 @@ const RegForm = ({ route }) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, }} showsVerticalScrollIndicator={true}>
       <View style={styles.inputContainer}>
-        <Text style={styles.containerText}>Register for room no: </Text>
+        <Text style={styles.containerText}>Registration </Text>
         <Formik
           validationSchema={signUpValidationSchema}
           initialValues={{
             name: '',
-            roll: '',
-            contactNo: '',
+            contact: '',
             email: '',
             address: '',
-            roomNo: '',
             password: '',
             confirmPassword: '',
           }}
@@ -188,17 +192,17 @@ const RegForm = ({ route }) => {
               <View>
                 <TextInput
                   mode="outlined"
-                  name="contactNo"
+                  name="contact"
                   placeholder="User contact no."
                   style={styles.textInput}
-                  onChangeText={handleChange('contactNo')}
-                  onBlur={handleBlur('contactNo')}
-                  value={values.contactNo}
+                  onChangeText={handleChange('contact')}
+                  onBlur={handleBlur('contact')}
+                  value={values.contact}
                   keyboardType='numeric'
                 />
-                {errors.contactNo && (
+                {errors.contact && (
                   <Text style={{ fontSize: 10, color: 'red' }}>
-                    {errors.contactNo}
+                    {errors.contact}
                   </Text>
                 )}
               </View>
@@ -272,24 +276,28 @@ const RegForm = ({ route }) => {
                 </Button>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15 }}>
-                {imageData?.uri && (<></>
-                  //   <Image
-                  //     source={{ uri: imageData.uri }}
-                  //     style={{
-                  //       width: 100,
-                  //       height: 100,
-                  //       borderRadius: 10,
-                  //       marginTop: 10,
-                  //     }}
-                  //     PlaceholderContent={<ActivityIndicator />}
-                  //   />
+                {imageData?.uri && (
+                  <Image
+                    source={{ uri: imageData.uri }}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                    PlaceholderContent={<ActivityIndicator />}
+                  />
                 )}
               </View>
+              {isLoading && <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />}
               {takenImg && <View style={{ marginTop: 20 }}>
                 <Button
                   onPress={handleSubmit}
-                  disabled={!isValid}
-                  mode="contained">
+
+                  disabled={isLoading}
+                  mode="contained"
+                  // loading={isLoading}
+                >
                   Register
                 </Button>
               </View>}

@@ -19,6 +19,10 @@ target 'repair_zone' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
+
   target 'repair_zoneTests' do
     inherit! :complete
     # Pods for testing
