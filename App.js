@@ -15,13 +15,14 @@ import LoginModal from './components/screens/LoginModal'
 import BottomNavigator_Admin from './components/screens/BottomNavigator_Admin';
 import BottomNavigator_User from './components/screens/BottomNavigator_User';
 import CustomBottomNavBar from './components/screens/CustomBottomNavBar';
+import Checkout from './components/CheckOutPage/Checkout';
 
 const Stack = createNativeStackNavigator();
 export const userContext = createContext();
 
 const App = () => {
   const [visible, setVisible] = useState(false);
-  const [userInfo, setUserInfo] = useState({delete:0,items:[]});
+  const [userInfo, setUserInfo] = useState({ delete: 0, items: [] });
   // console.log(userInfo.items);
 
 
@@ -37,6 +38,7 @@ const App = () => {
               <>
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Cart" component={Cart} />
+                <Stack.Screen name="checkout" component={Checkout} />
                 <Stack.Screen name="OTPPage" component={OTPPage} />
                 <Stack.Screen name="Registration" component={RegistrationPage} />
                 <Stack.Screen name="Login" component={LoginPage} />
@@ -47,7 +49,7 @@ const App = () => {
           </Stack.Navigator>
           {
             !userInfo.admin &&
-            <CustomBottomNavBar/>
+            <CustomBottomNavBar />
           }
         </NavigationContainer>
         {/* <loginModal /> */}

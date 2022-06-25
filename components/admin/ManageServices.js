@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, RefreshControl,StyleSheet } from 'react-native';
+import { View, FlatList, RefreshControl, StyleSheet } from 'react-native';
 import {
   Modal,
   Portal,
@@ -69,7 +69,7 @@ const ManageServices = () => {
 
   useEffect(() => {
     setVisible(true);
-    const restServices = allServices.filter(service=> service._id != deleted);
+    const restServices = allServices.filter(service => service._id != deleted);
     setAllServices(restServices);
     setVisible(false);
   }, [deleted])
@@ -86,7 +86,7 @@ const ManageServices = () => {
         data={allServices}
         renderItem={renderItem}
         keyExtractor={item => item._id}
-      /> : <Text style={{ fontSize: 30 }}>Empty room</Text>
+      /> : <Text style={{ fontSize: 30 }}>Empty service</Text>
       }
 
     </View>

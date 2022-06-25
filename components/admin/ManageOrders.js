@@ -78,7 +78,7 @@ const ManageOrders = () => {
   const renderItem = ({ item }) => <EachService item={item} />;
   return (<>
 
-    <View>
+    {/* <View>
       {allServices.length ? <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -96,7 +96,7 @@ const ManageOrders = () => {
           {!netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> : <><Text>Loading....Please wait.</Text><ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} /></>}
         </Modal>
       </Portal>
-    </Provider>
+    </Provider> */}
   </>
   );
 };
