@@ -7,7 +7,8 @@ import { Icon } from 'react-native-elements'
 const EachCard = (props) => {
     // console.log()
     const [cartItems, setCartItems] = useContext(userContext);
-    const { name, cause, price } = props.data
+    const { _id, title, category, cause, symptoms, price, contentType, img } = props.item;
+
     const handleAddToCart = (data) => {
         const newData = { ...data, expert: expert }
         setCartItems({ ...cartItems, items: [newData, ...cartItems.items] })
@@ -18,10 +19,10 @@ const EachCard = (props) => {
     }
     return (
         <Card style={{ margin: 5 }}>
-            <Card.Cover source={{ uri: `https://picsum.photos/800` }} />
+            <Card.Cover source={{ uri: `data:${contentType};base64,${img}` }} />
 
             <Card.Content>
-                <Title>{name}</Title>
+                <Title>{title}</Title>
                 <Paragraph style={{ color: 'black' }}>{cause}</Paragraph>
             </Card.Content>
             <Card.Title title={`Repair cost: ${price}$`} />
@@ -88,7 +89,7 @@ const EachCard = (props) => {
                 </View>
             </RadioButton.Group >
             <Card.Actions>
-                <Button onPress={() => handleAddToCart(props.data)}>Add to Cart</Button>
+                <Button onPress={() => handleAddToCart(props.item)}>Add to Cart</Button>
                 <Button>Order now</Button>
             </Card.Actions>
         </Card>

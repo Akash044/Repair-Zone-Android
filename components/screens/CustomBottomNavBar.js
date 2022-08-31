@@ -5,41 +5,56 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { userContext } from '../../App';
 
-const CustomBottomNavBar = () => {
+const CustomBottomNavBar = (props) => {
+    const { user } = props
     const navigation = useNavigation()
     const [cartItems, setCartItems] = useContext(userContext);
+    // const [enableUserOptions, setEnableUserOptions] = useState(user)
 
     const [visible, setVisible] = useState(false);
 
+
+    const signOut = () => {
+        setCartItems({ ...cartItems, isLogged: false, user: false })
+        // setEnableUserOptions(false)
+    }
 
     return (
         <View style={styles.containerMain}>
             {visible &&
                 <View style={{ marginBottom: 50 }}>
-                    <Menu.Item icon="login" onPress={() => { navigation.navigate("Login") }} title="Login" />
+                    <Menu.Item icon="login" onPress={() => { user ? signOut() : navigation.navigate("Login") }} title={user ? "Log out" : "Login"} />
                     <Menu.Item icon="plus" onPress={() => { navigation.navigate("Registration") }} title="Registration" />
-                    <Menu.Item icon="content-cut" onPress={() => { }} title="Cut" disabled />
-                    <Menu.Item icon="content-copy" onPress={() => { }} title="Copy" disabled />
-                    <Menu.Item icon="content-paste" onPress={() => { }} title="Paste" />
+                    {
+                        user &&
+                        <>
+                            <Menu.Item icon="order-alphabetical-ascending" onPress={() => { navigation.navigate("allOrders") }} title="Orders" />
+                            <Menu.Item icon="account" onPress={() => { navigation.navigate("profile") }} title="Profile" />
+                        </>
+                    }
                 </View>
             }
             <View style={styles.bottomView}>
                 <TouchableRipple style={styles.textContainer} onPress={() => { navigation.navigate("Home") }}>
                     <>
-                        <Text >Home</Text>
-                        <MaterialCommunityIcons name="home" color="#000" size={26} />
+                        <Text style={{ color: "white" }}>Home</Text>
+                        <MaterialCommunityIcons name="home" color="white" size={26} />
                     </>
                 </TouchableRipple>
                 <TouchableRipple style={styles.textContainer} onPress={() => { navigation.navigate("Cart") }}>
                     <>
-                        <Text >Cart: {cartItems.items.length}</Text>
-                        <MaterialCommunityIcons name="cart" color="#000" size={26} />
+                        <Text style={{ color: "white" }}>Cart: {cartItems.items?.length}</Text>
+                        <MaterialCommunityIcons name="cart" color="white" size={26} />
                     </>
                 </TouchableRipple>
                 <TouchableRipple style={styles.textContainer} onPress={() => { setVisible(!visible) }}>
                     <>
-                        <Text >Menu</Text>
-                        <MaterialCommunityIcons name="menu" color="#000" size={26} />
+                        {user ?
+                            <Text style={{ color: "white" }}>Account</Text>
+                            :
+                            <Text style={{ color: "white" }}>Menu</Text>
+                        }
+                        <MaterialCommunityIcons name="menu" color="white" size={26} />
                     </>
                 </TouchableRipple>
             </View>
@@ -54,11 +69,12 @@ const styles = StyleSheet.create({
         // flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+
     },
     bottomView: {
         width: '100%',
         height: 54,
-        backgroundColor: '#EE5407',
+        backgroundColor: '#6200f0',
         justifyContent: 'space-evenly',
         alignItems: 'center',
         position: 'absolute', //Here is the trick
@@ -68,6 +84,6 @@ const styles = StyleSheet.create({
     textContainer: {
         paddingHorizontal: 16,
         fontWeight: 'bold',
-        justifyContent: "center", alignItems: "center"
+        justifyContent: "center", alignItems: "center",
     }
 })

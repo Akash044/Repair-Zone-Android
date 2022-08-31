@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ScrollView, StyleSheet, View} from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import {
   Modal,
   Portal,
@@ -7,7 +7,7 @@ import {
   Provider,
   ActivityIndicator,
   Colors,
-  TextInput, Button 
+  TextInput, Button
 } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 // import { Picker } from '@react-native-community/picker';
@@ -66,7 +66,7 @@ const RegForm = ({ navigation }) => {
     fetch('http://localhost:8085/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...values, ...imageData , admin:false}),
+      body: JSON.stringify({ ...values, ...imageData, admin: false, user: true }),
     })
       .then(res => res.json())
       .then(data => {
@@ -296,7 +296,7 @@ const RegForm = ({ navigation }) => {
 
                   disabled={isLoading}
                   mode="contained"
-                  // loading={isLoading}
+                // loading={isLoading}
                 >
                   Register
                 </Button>

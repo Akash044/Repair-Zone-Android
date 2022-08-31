@@ -1,55 +1,51 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { DataTable, TouchableRipple, Button } from 'react-native-paper';
-import CustomBottomNavBar from './CustomBottomNavBar'
+// import CustomBottomNavBar from './CustomBottomNavBar'
 import { userContext } from '../../App';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Cart = (props) => {
+const Cart = ({ navigation }) => {
   const [cartItems, setCartItems] = useContext(userContext);
-  const [showItems, setShowItems] = useState([])
+  // const [showItems, setShowItems] = useState([])
   const [distinctItems, setDistinctItems] = useState([])
   const [counts, setCounts] = useState({})
-  const navigation = useNavigation()
-  console.log("all cart items--> ", cartItems.items)
 
   useEffect(() => {
-
     let uniqueObjArray = [
-      ...new Map(cartItems.items.map((item) => [item["name"], item])).values(),
+      ...new Map(cartItems.items.map((item) => [item["_id"], item])).values(),
     ];
-    // console.log(uniqueObjArray)
     setDistinctItems(uniqueObjArray)
-    cartItems.items.forEach((i) => counts[i.name] = (counts[i.name] || 0) + 1);
+    cartItems.items.forEach((i) => counts[i._id] = (counts[i._id] || 0) + 1);
 
   }, [cartItems.items.length])
-  // console.log("after update-->", distinctItems, counts)
-  const handleRemoveItems = (name) => {
 
-    const afterRemove = distinctItems.filter(item => item.name != name)
-    // console.log("after remove-->", afterRemove)
+  const handleRemoveItems = (id) => {
+
+    const afterRemove = distinctItems.filter(item => item._id !== id)
+    const restItems = cartItems.items.filter(item => item._id !== id)
     setDistinctItems(afterRemove)
     setCounts({})
-    setCartItems({ ...cartItems, items: afterRemove })
-
-    // cartItems.items.forEach((i) => counts[i.name] = (counts[i.name] || 0) + 1);
+    setCartItems({ ...cartItems, items: restItems })
 
   }
   const handlePlusBtn = (id) => {
-    console.log(id)
-    const newItem = distinctItems.filter(item => item.id === id);
+    const newItem = distinctItems.filter(item => item._id === id);
     setCounts({})
     setCartItems({ ...cartItems, items: [newItem[0], ...cartItems.items] })
-    cartItems.items.forEach((i) => counts[i.name] = (counts[i.name] || 0) + 1);
   }
 
   const handleMinusBtn = (id) => {
-    console.log(id)
-    const restItems = distinctItems.filter(item => item.id !== id);
+    const matched = cartItems.items.filter(item => item._id === id);
+    const unMatched = cartItems.items.filter(item => item._id !== id);
+    const size = matched.length
+    let arr = []
+    for (let i = 0; i < (size - 1); i++) {
+      arr.push(matched[i])
+    }
     setCounts({})
-    setCartItems({ ...cartItems, items: restItems })
-    cartItems.items.forEach((i) => counts[i.name] = (counts[i.name] || 0) + 1);
+    setCartItems({ ...cartItems, items: [...arr, ...unMatched] })
   }
 
   return (
@@ -69,31 +65,33 @@ const Cart = (props) => {
 
                 <DataTable.Row key={index} style={{ marginVertical: 16 }}>
                   <DataTable.Cell>{index + 1}</DataTable.Cell>
-                  <DataTable.Cell style={{ marginRight: 8 }}>{item.name}</DataTable.Cell>
+                  <DataTable.Cell style={{ marginRight: 8 }}>{item.title}</DataTable.Cell>
                   <DataTable.Cell numeric>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <TouchableRipple
-                        onPress={() => handlePlusBtn(item.id)}
+                        onPress={() => handlePlusBtn(item._id)}
                         rippleColor="rgba(0, 0, 0, .32)"
                         style={{ padding: 4 }}
                       >
                         <MaterialCommunityIcons name="plus" color="#000" size={12} />
                       </TouchableRipple>
 
-                      <Text style={{ paddingHorizontal: 4 }}>{counts[item.name]}</Text>
+                      <Text style={{ paddingHorizontal: 4 }}>{counts[item._id]}</Text>
+
                       <TouchableRipple
-                        onPress={() => handleMinusBtn(item.id)}
+                        onPress={() => handleMinusBtn(item._id)}
                         rippleColor="rgba(0, 0, 0, .32)"
                         style={{ padding: 4 }}
                       >
                         <MaterialCommunityIcons name="minus" color="#000" size={12} />
                       </TouchableRipple>
+
                     </View>
                   </DataTable.Cell>
-                  <DataTable.Cell numeric>{counts[item.name] * item.price}</DataTable.Cell>
+                  <DataTable.Cell numeric>{counts[item._id] * item.price}</DataTable.Cell>
                   <DataTable.Cell numeric>
                     <TouchableRipple
-                      onPress={() => handleRemoveItems(item.name)}
+                      onPress={() => handleRemoveItems(item._id)}
                       rippleColor="rgba(0, 0, 0, .32)"
                       style={{ padding: 4 }}
                     >
@@ -112,7 +110,7 @@ const Cart = (props) => {
       </View>
       {/* <CustomBottomNavBar /> */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-        <Button mode="contained" onPress={() => { navigation.navigate("checkout") }}>
+        <Button mode="contained" onPress={() => { navigation.navigate("checkout"), { cart: cartItems.items } }}>
           <MaterialCommunityIcons name="text-box-check-outline" color="white" size={14} />
           Checkout
         </Button>

@@ -52,7 +52,7 @@ const OTPPage = ({ route, navigation }) => {
             fetch('http://localhost:8085/verifyUser', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ otp:otp, email:userInfo.email}),
+                body: JSON.stringify({ otp: otp, email: userInfo.email }),
             })
                 .then(res => res.json())
                 .then(data => {
@@ -160,7 +160,7 @@ const OTPPage = ({ route, navigation }) => {
                 /></View>
 
             </View>
-            <View style={{ marginBottom: 20, marginHorizontal: 20 }}>
+            <View style={{ marginBottom: 40, marginHorizontal: 20 }}>
                 <Button
                     onPress={changeMode ? handleSubmit : handleResendBtn}
 

@@ -195,7 +195,7 @@ const AddServices = () => {
     <Provider>
       <Portal>
         <Modal visible={visible} contentContainerStyle={containerStyle}>
-          <Text>Uploading room information. Please wait</Text>
+          <Text>Uploading service information. Please wait</Text>
           <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
         </Modal>
       </Portal>

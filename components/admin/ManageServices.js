@@ -35,15 +35,22 @@ const ManageServices = () => {
     });
     setRefreshing(true)
     setVisible(true);
-    fetch('https://intense-ridge-49211.herokuapp.com/allRooms')
+
+
+    fetch('http://localhost:8085/allServices')
+
       .then(res => res.json())
-      .then(rooms => {
-        setAllServices(rooms);
+      .then(services => {
+        setAllServices(services);
         setVisible(false);
       })
       .catch(err => {
 
       })
+
+
+
+
     wait(4000).then(() => {
       setRefreshing(false);
     }

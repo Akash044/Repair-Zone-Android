@@ -11,7 +11,7 @@ import {
 import { userContext } from '../../App';
 
 const EachService = (props) => {
-    const { title,category,cause,symptoms,price,contentType,img} = props.item;
+    const { _id, title, category, cause, symptoms, price, contentType, img } = props.item;
     const [loggedUser, setLoggedUser] = useContext(userContext);
     const [visible, setVisible] = useState(false);
     const [updatedServiceInfo, setUpdatedServiceInfo] = useState({
@@ -33,15 +33,15 @@ const EachService = (props) => {
 
 
     const handleDeleteServiceBtn = serviceID => {
-        fetch(`http://localhost:8085/deleteRoom/${serviceID}`, {
+        fetch(`http://localhost:8085/deleteService/${serviceID}`, {
             method: 'DELETE',
         })
             .then(res => res.json())
             .then(data => {
-                data && alert('Room deleted successfully');
+                data && alert('Service deleted successfully');
                 setLoggedUser({ ...loggedUser, deleted: serviceID });
             })
-            .catch(err => { alert({err},'Error updating room info.Try again later') })
+            .catch(err => { alert({ err }, 'Error updating room info.Try again later') })
     };
 
     const handleUpdateServiceModalBtn = () => {
@@ -57,9 +57,9 @@ const EachService = (props) => {
             .then(res => res.json())
             .then(data => {
                 setVisible(false);
-                data && alert('Room info updated successfully');
+                data && alert('Service info updated successfully');
             }).catch(err => {
-                alert('Error updating room info. Try again later')
+                alert('Error updating service info. Try again later')
             })
     };
 
@@ -67,8 +67,9 @@ const EachService = (props) => {
     return (
         <>
             <Card style={styles.item}>
-                <Card.Cover source={{uri: `data:${contentType};base64,${img}`,}}/>
-                <Card.Title title={`Title: ${title}`} />
+                <Card.Cover source={{ uri: `data:${contentType};base64,${img}`, }} />
+                <Card.Title title={`Title: ${title} `} />
+                {/* <Card.Title title={`Title: ${_id} `} /> */}
                 <Card.Content>
                     <Title>Cause:</Title>
                     <Paragraph>{cause}</Paragraph>
@@ -87,7 +88,7 @@ const EachService = (props) => {
                         <Button icon="delete"
                             mode="contained"
                             color="red"
-                            onPress={() => handleDeleteServiceBtn(props.item._id)}>
+                            onPress={() => handleDeleteServiceBtn(_id)}>
                             Delete
                         </Button>
                     </Card.Actions>
@@ -99,13 +100,13 @@ const EachService = (props) => {
                                 label="Service title"
                                 value={updatedServiceInfo.title}
                                 onChangeText={text => handleInputField({ title: text })}
-                                // keyboardType='numeric'
+                            // keyboardType='numeric'
                             />
                             <TextInput
                                 label="Cause:"
                                 value={updatedServiceInfo.cause}
                                 onChangeText={text => handleInputField({ cause: text })}
-                                // keyboardType='numeric'
+                            // keyboardType='numeric'
                             />
                             <TextInput
                                 label="symptoms:"

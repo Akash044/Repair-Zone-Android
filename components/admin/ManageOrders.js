@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, RefreshControl,StyleSheet } from 'react-native';
+import { View, FlatList, RefreshControl, StyleSheet } from 'react-native';
 import {
   Modal,
   Portal,
@@ -11,6 +11,7 @@ import {
 import NetInfo from "@react-native-community/netinfo";
 import { userContext } from '../../App';
 import EachService from './EachService';
+import EachOrder from './EachOrder';
 
 const wait = (timeout) => {
   return new Promise((resolve) => {
@@ -21,7 +22,7 @@ const wait = (timeout) => {
 
 const ManageOrders = () => {
   const [loggedUser, setLoggedUser] = useContext(userContext);
-  const [allServices, setAllServices] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [visible, setVisible] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [netStatus, setNetStatus] = useState(true);
@@ -35,10 +36,10 @@ const ManageOrders = () => {
     });
     setRefreshing(true)
     setVisible(true);
-    fetch('https://intense-ridge-49211.herokuapp.com/allRooms')
+    fetch('http://localhost:8085/orders')
       .then(res => res.json())
-      .then(rooms => {
-        setAllServices(rooms);
+      .then(orders => {
+        setOrders(orders);
         setVisible(false);
       })
       .catch(err => {
@@ -56,34 +57,26 @@ const ManageOrders = () => {
     });
 
     setVisible(true);
-    fetch('https://intense-ridge-49211.herokuapp.com/allRooms')
+    fetch('http://localhost:8085/orders')
       .then(res => res.json())
-      .then(services => {
-        setAllServices(services);
+      .then(orders => {
+        setOrders(orders);
         setVisible(false);
-
       })
       .catch(err => { console.log(err) })
   }, []);
 
 
-  useEffect(() => {
-    setVisible(true);
-    const restServices = allServices.filter(service=> service._id != deleted);
-    setAllServices(restServices);
-    setVisible(false);
-  }, [deleted])
 
-
-  const renderItem = ({ item }) => <EachService item={item} />;
+  const renderItem = ({ item }) => <EachOrder order={item} />;
   return (<>
 
-    {/* <View>
-      {allServices.length ? <FlatList
+    <View>
+      {orders.length ? <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        data={allServices}
+        data={orders}
         renderItem={renderItem}
         keyExtractor={item => item._id}
       /> : <Text style={{ fontSize: 30 }}>Empty room</Text>
@@ -96,7 +89,7 @@ const ManageOrders = () => {
           {!netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> : <><Text>Loading....Please wait.</Text><ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} /></>}
         </Modal>
       </Portal>
-    </Provider> */}
+    </Provider>
   </>
   );
 };

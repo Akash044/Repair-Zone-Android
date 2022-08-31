@@ -16,15 +16,20 @@ import BottomNavigator_Admin from './components/screens/BottomNavigator_Admin';
 import BottomNavigator_User from './components/screens/BottomNavigator_User';
 import CustomBottomNavBar from './components/screens/CustomBottomNavBar';
 import Checkout from './components/CheckOutPage/Checkout';
+import ShowAllOrders from './components/user/ShowAllOrders';
+import Profile from './components/user/Profile';
 
 const Stack = createNativeStackNavigator();
 export const userContext = createContext();
 
 const App = () => {
   const [visible, setVisible] = useState(false);
-  const [userInfo, setUserInfo] = useState({ delete: 0, items: [] });
-  // console.log(userInfo.items);
+  const [userInfo, setUserInfo] = useState({ delete: 0, items: [], totalItem: 0 });
+  console.log(userInfo.user);
 
+  const signOut = () => {
+    setUserInfo({ ...userInfo, isLogged: false, admin: false })
+  }
 
   return (
     <userContext.Provider value={[userInfo, setUserInfo]}>
@@ -32,9 +37,36 @@ const App = () => {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             {userInfo.isLogged ?
-              (userInfo.admin ?
-                <Stack.Screen name="Admin" component={BottomNavigator_Admin} /> :
-                <Stack.Screen name="User" component={BottomNavigator_User} />) :
+              (
+                userInfo.admin ?
+                  <Stack.Screen name="Admin"
+
+                    options={{
+                      headerRight: () => (
+                        <View style={{ flexDirection: 'row' }}>
+                          <View style={{ paddingTop: 5 }}>
+                            <Text>{userInfo.name} </Text>
+                          </View>
+                          <View style={{ paddingRight: 5 }}>
+                            <Button mode="outlined" onPress={signOut}>logout</Button>
+
+                          </View>
+                        </View>
+                      ),
+                    }}
+
+                    component={BottomNavigator_Admin} />
+                  :
+                  <>
+                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Cart" component={Cart} />
+                    <Stack.Screen name="checkout" component={Checkout} />
+                    <Stack.Screen name="allOrders" component={ShowAllOrders} />
+                    <Stack.Screen name="profile" component={Profile} />
+                    <Stack.Screen name="Login" component={LoginPage} />
+                  </>
+              )
+              :
               <>
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Cart" component={Cart} />
@@ -43,22 +75,13 @@ const App = () => {
                 <Stack.Screen name="Registration" component={RegistrationPage} />
                 <Stack.Screen name="Login" component={LoginPage} />
               </>
-
             }
-
           </Stack.Navigator>
           {
             !userInfo.admin &&
-            <CustomBottomNavBar />
+            <CustomBottomNavBar user={userInfo.user} />
           }
         </NavigationContainer>
-        {/* <loginModal /> */}
-        {/* <Home /> */}
-        {/* <LoginPage /> */}
-        {/* <RegistrationPage /> */}
-        {/* <OTPPage /> */}
-        {/* <LoginModal  isShow={visible}/> */}
-
       </SafeAreaProvider>
     </userContext.Provider>
   );

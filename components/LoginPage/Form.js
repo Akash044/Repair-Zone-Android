@@ -14,6 +14,7 @@ import {
 import NetInfo from "@react-native-community/netinfo";
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { useNavigation } from '@react-navigation/native';
 
 const signInValidationSchema = yup.object().shape({
   email: yup
@@ -32,19 +33,20 @@ const signInValidationSchema = yup.object().shape({
 });
 
 const Form = () => {
+  const navigation = useNavigation()
   const [loggedUser, setLoggedUser] = useContext(userContext);
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(false);
   const [netStatus, setNetStatus] = useState(true);
   const containerStyle = { marginHorizontal: 30, borderRadius: 10, backgroundColor: 'white', padding: 20, zIndex: 99 };
-  
+
   useEffect(() => {
     NetInfo.addEventListener(networkState => {
       setNetStatus(networkState.isConnected)
     });
     console.log(netStatus)
-  },[])
-  
+  }, [])
+
 
   const handleEmailPassSignIn = async userInfo => {
     console.log("coming")
@@ -61,12 +63,14 @@ const Form = () => {
       .then(res => res.json())
       .then(data => {
         console.log("from login---> ", data)
-        setLoggedUser({...data.info,...loggedUser,isLogged:true});
+        data.login && setLoggedUser({ ...loggedUser, ...data.info, isLogged: true });
+        data.admin && setLoggedUser({ ...loggedUser, ...data.info, isLogged: true, admin: true });
         setError(data.message);
         setVisible(false);
+        // data.login && navigation.navigate("Home")
 
       })
-      .catch(err => {   
+      .catch(err => {
       })
   };
 
@@ -121,7 +125,7 @@ const Form = () => {
               <Button disabled={!isValid} mode="contained" onPress={handleSubmit}> Sign in </Button>
             </View>
             {
-              error.length > 0 && <Text style={{ textAlign: 'center'}}>{error}</Text>
+              error.length > 0 && <Text style={{ textAlign: 'center', color: 'red', fontWeight: "bold" }}>{error}</Text>
             }
           </>
         )}
@@ -131,8 +135,8 @@ const Form = () => {
           <Portal>
             <Modal visible={visible} contentContainerStyle={containerStyle}>
               {
-                !netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> :<ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
-                
+                !netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> : <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
+
               }
             </Modal>
           </Portal>
