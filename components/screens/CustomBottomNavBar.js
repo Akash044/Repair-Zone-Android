@@ -1,4 +1,4 @@
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { Text, TouchableRipple, Menu } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -9,14 +9,10 @@ const CustomBottomNavBar = (props) => {
     const { user } = props
     const navigation = useNavigation()
     const [cartItems, setCartItems] = useContext(userContext);
-    // const [enableUserOptions, setEnableUserOptions] = useState(user)
-
     const [visible, setVisible] = useState(false);
-
 
     const signOut = () => {
         setCartItems({ ...cartItems, isLogged: false, user: false })
-        // setEnableUserOptions(false)
     }
 
     return (

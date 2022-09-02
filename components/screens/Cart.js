@@ -1,14 +1,11 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { DataTable, TouchableRipple, Button } from 'react-native-paper';
-// import CustomBottomNavBar from './CustomBottomNavBar'
 import { userContext } from '../../App';
-// import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Cart = ({ navigation }) => {
   const [cartItems, setCartItems] = useContext(userContext);
-  // const [showItems, setShowItems] = useState([])
   const [distinctItems, setDistinctItems] = useState([])
   const [counts, setCounts] = useState({})
 
@@ -108,9 +105,8 @@ const Cart = ({ navigation }) => {
 
 
       </View>
-      {/* <CustomBottomNavBar /> */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-        <Button mode="contained" onPress={() => { navigation.navigate("checkout"), { cart: cartItems.items } }}>
+        <Button disabled={!cartItems.items.length > 0} mode="contained" onPress={() => { navigation.navigate("checkout"), { cart: cartItems.items } }}>
           <MaterialCommunityIcons name="text-box-check-outline" color="white" size={14} />
           Checkout
         </Button>

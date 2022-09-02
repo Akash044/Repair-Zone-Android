@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { Image } from 'react-native-elements';
 import { Modal, Portal, Text, Button, Provider, TextInput, ActivityIndicator, Colors } from 'react-native-paper';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker'
+import { Image } from 'react-native-elements';
 import { Picker } from '@react-native-community/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Formik } from 'formik';

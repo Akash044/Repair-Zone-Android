@@ -44,16 +44,14 @@ const Form = () => {
     NetInfo.addEventListener(networkState => {
       setNetStatus(networkState.isConnected)
     });
-    console.log(netStatus)
+
   }, [])
 
 
   const handleEmailPassSignIn = async userInfo => {
-    console.log("coming")
     NetInfo.addEventListener(networkState => {
       setNetStatus(networkState.isConnected)
     });
-    console.log(netStatus)
     setVisible(true);
     await fetch('http://localhost:8085/login', {
       method: 'POST',
@@ -62,12 +60,10 @@ const Form = () => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("from login---> ", data)
         data.login && setLoggedUser({ ...loggedUser, ...data.info, isLogged: true });
         data.admin && setLoggedUser({ ...loggedUser, ...data.info, isLogged: true, admin: true });
         setError(data.message);
         setVisible(false);
-        // data.login && navigation.navigate("Home")
 
       })
       .catch(err => {
@@ -96,7 +92,7 @@ const Form = () => {
             <TextInput
               mode="outlined"
               name="email"
-              placeholder="Email Address"
+              label="Email Address"
               style={styles.textInput}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
@@ -109,7 +105,7 @@ const Form = () => {
             <TextInput
               mode="outlined"
               name="password"
-              placeholder="Password"
+              label="Password"
               style={styles.textInput}
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
@@ -133,9 +129,14 @@ const Form = () => {
       <View>
         <Provider>
           <Portal>
-            <Modal visible={visible} contentContainerStyle={containerStyle}>
+            <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
               {
-                !netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> : <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
+                !netStatus ?
+                  <Text style={{ marginTop: 250, color: "red" }}>
+                    Network failed. Please connect your device to network
+                  </Text>
+                  :
+                  <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
 
               }
             </Modal>
@@ -158,6 +159,13 @@ const styles = StyleSheet.create({
     elevation: 1,
     zIndex: -99
   },
+  containerStyle: {
+    marginHorizontal: 30,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    padding: 20,
+    zIndex: 99
+  }
 });
 
 export default Form;

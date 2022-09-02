@@ -6,10 +6,9 @@ const Profile = () => {
   const [loggedUser, setLoggedUser] = useContext(userContext);
   const { name, email, img, contentType } = loggedUser
   return (
-    <View>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
         <Image
-          // style={styles.logo}
           source={{
             uri: `data:${contentType};base64,${img}`,
           }}

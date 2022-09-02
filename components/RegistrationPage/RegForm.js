@@ -1,16 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import {
-  Modal,
-  Portal,
   Text,
-  Provider,
   ActivityIndicator,
   Colors,
   TextInput, Button
 } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
-// import { Picker } from '@react-native-community/picker';
 import { Image } from 'react-native-elements';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -19,7 +15,6 @@ import { userContext } from '../../App';
 
 const signUpValidationSchema = yup.object().shape({
   name: yup.string().required('User name is Required'),
-  //   roll: yup.string().min(7).max(7).required('User roll is Required'),
   contact: yup.string().matches(/(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/, 'Must follow bd number pattern').required('Contact number is Required'),
   email: yup
     .string()
@@ -46,22 +41,8 @@ const RegForm = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [takenImg, setTakenImg] = useState(false)
 
-  const updateRoomVacantStatus = () => {
-    // fetch('https://intense-ridge-49211.herokuapp.com/bookedRoom', {
-    //   method: 'PATCH',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ id: id, status: false }),
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setLoggedUser({ ...loggedUser, booked: id })
-    //   })
-    //   .catch(err => {console.log(err)})
-  }
-
   const handleRegisterBtn = values => {
-    console.log(values);
-    //  navigation.navigate('OTPPage', {})
+
     setIsLoading(true)
     fetch('http://localhost:8085/signup', {
       method: 'POST',
@@ -70,7 +51,6 @@ const RegForm = ({ navigation }) => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         setUserInfo({ ...values, ...imageData })
         data && alert('OTP has been sent in your email, please verify');
         setIsLoading(false)
@@ -84,8 +64,6 @@ const RegForm = ({ navigation }) => {
   const handleImgInput = () => {
     const options = {
       includeBase64: true,
-      // maxWidth: 100,
-      // maxHeight: 100,
     };
     try {
       launchImageLibrary(options, response => {
@@ -135,59 +113,6 @@ const RegForm = ({ navigation }) => {
               {errors.name && (
                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.name}</Text>
               )}
-
-              {/* <TextInput
-                mode="outlined"
-                name="roll"
-                placeholder="User roll"
-                style={styles.textInput}
-                onChangeText={handleChange('roll')}
-                onBlur={handleBlur('roll')}
-                value={values.roll}
-                keyboardType='numeric'
-              /> */}
-              {errors.roll && (
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.roll}</Text>
-              )}
-
-              <View >
-                {/* <Text>Select Department</Text> */}
-                {/* <Picker
-                  selectedValue={deptSec.dept}
-                  style={{ height: 50, width: 120 }}
-                  onValueChange={(itemValue, itemIndex) =>
-                    handlePickerField({ dept: itemValue })
-                  }>
-                  <Picker.Item label="CSE" value="CSE" />
-                  <Picker.Item label="EEE" value="EEE" />
-                  <Picker.Item label="ECE" value="ECE" />
-                  <Picker.Item label="ETE" value="ETE" />
-                  <Picker.Item label="ME" value="ME" />
-                  <Picker.Item label="MSE" value="MSE" />
-                  <Picker.Item label="IPE" value="IPE" />
-                  <Picker.Item label="MTE" value="MTE" />
-                  <Picker.Item label="CFPE" value="CFPE" />
-                  <Picker.Item label="GCE" value="GCE" />
-                  <Picker.Item label="CE" value="CE" />
-                  <Picker.Item label="BECM" value="BECM" />
-                  <Picker.Item label="URP" value="URP" />
-                  <Picker.Item label="ARCH." value="ARCH." />
-                </Picker>
-                <Text>Select Section</Text>
-                <Picker
-                  selectedValue={deptSec.sec}
-                  style={{ height: 50, width: 120 }}
-                  onValueChange={(itemValue, itemIndex) =>
-                    handlePickerField({ sec: itemValue })
-                  }>
-                  <Picker.Item label="A" value="A" />
-                  <Picker.Item label="B" value="B" />
-                  <Picker.Item label="C" value="C" />
-
-                </Picker> */}
-
-              </View>
-
 
               <View>
                 <TextInput
@@ -272,7 +197,7 @@ const RegForm = ({ navigation }) => {
                   marginTop: 15,
                 }}>
                 <Button icon="image" mode="outlined" onPress={handleImgInput}>
-                  Upload image{' '}
+                  Upload image
                 </Button>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15 }}>
@@ -296,7 +221,6 @@ const RegForm = ({ navigation }) => {
 
                   disabled={isLoading}
                   mode="contained"
-                // loading={isLoading}
                 >
                   Register
                 </Button>

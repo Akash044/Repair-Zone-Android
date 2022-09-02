@@ -33,10 +33,6 @@ const OTPPage = ({ route, navigation }) => {
     const [userInfo, setUserInfo] = useContext(userContext);
     const [showSendBtn, setShowSendBtn] = useState(true)
     const [changeMode, setChangeMode] = useState(true)
-    const [minutes, setMinutes] = useState(0)
-    const [seconds, setSeconds] = useState(0)
-    const [distance, setDistance] = useState(300000)
-    // console.log(route.params.userData)
 
 
 
@@ -56,7 +52,6 @@ const OTPPage = ({ route, navigation }) => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    // setUserInfo({ ...values, ...imageData })
                     data && alert('User verified successfully.Please go to login page!');
                     data && navigation.navigate('Login');
 
@@ -160,7 +155,7 @@ const OTPPage = ({ route, navigation }) => {
                 /></View>
 
             </View>
-            <View style={{ marginBottom: 40, marginHorizontal: 20 }}>
+            <View style={{ marginBottom: 60, marginHorizontal: 20 }}>
                 <Button
                     onPress={changeMode ? handleSubmit : handleResendBtn}
 

@@ -1,12 +1,8 @@
 import { StyleSheet, View, ScrollView, FlatList, RefreshControl, Pressable } from 'react-native';
-import { RadioButton, Text, Button, Avatar, Searchbar, Provider, Portal, Modal, ActivityIndicator, Colors } from 'react-native-paper';
+import { RadioButton, Text, Button, Searchbar, Provider, Portal, Modal, ActivityIndicator, Colors } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
-import { dummyData } from '../assets/dummyData';
 import EachCard from './EachCard';
-// import CustomBottomNavBar from '../screens/CustomBottomNavBar';
 import NetInfo from "@react-native-community/netinfo";
-// import EachService from '../admin/EachService';
-// import { FlatList } from 'react-native-gesture-handler';
 
 const wait = (timeout) => {
   return new Promise((resolve) => {
@@ -14,7 +10,7 @@ const wait = (timeout) => {
   })
 }
 
-const options = ["AC", "MOTOR", "FRIDGE", "RICE COOKER", "INDUCTION COOKER", "IRON"]
+// const options = ["AC", "MOTOR", "FRIDGE", "RICE COOKER", "INDUCTION COOKER", "IRON"]
 
 const Home = () => {
   const [value, setValue] = useState('first');
@@ -22,29 +18,23 @@ const Home = () => {
   const [selected, setSelected] = useState(false);
   const [selectedItems, setSelectedItems] = useState({});
   const [searchResult, setSearchResult] = useState({});
-  // console.log(dummyData)
-  const [dummyItems, setDummyItems] = useState([]);
-
   const [searchQuery, setSearchQuery] = useState('');
 
-
-  // const [loggedUser, setLoggedUser] = useContext(userContext);
   const [allServices, setAllServices] = useState([]);
   const [visible, setVisible] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [netStatus, setNetStatus] = useState(true);
+  const [category, setCategory] = useState([]);
 
 
 
   const onChangeSearch = query => {
     setSearchQuery(query);
-    // console.log(query);
     const searchText = query.toLowerCase();
     const matchedItems = selectedItems.filter(item => {
       const itemName = item.symptoms.toLowerCase();
       return itemName.indexOf(searchText) > -1;
     });
-    // console.log(matchedItems);
     setSearchResult(matchedItems);
   };
 
@@ -61,10 +51,18 @@ const Home = () => {
       .then(services => {
         setAllServices(services);
         setVisible(false);
+        let arr = []
+        services.forEach(service => {
+          arr.push(service.category);
+        })
+        const onlyUnique = (value, index, self) => {
+          return self.indexOf(value) === index;
+        }
+        const unique = arr.filter(onlyUnique);
+        setCategory(unique)
       })
-      .catch(err => {
+      .catch(err => { })
 
-      })
     wait(4000).then(() => {
       setRefreshing(false);
     }
@@ -74,9 +72,6 @@ const Home = () => {
 
 
   useEffect(() => {
-    // setDummyItems(dummyData);
-
-
     NetInfo.addEventListener(networkState => {
       setNetStatus(networkState.isConnected)
     });
@@ -85,9 +80,17 @@ const Home = () => {
     fetch('http://localhost:8085/allServices')
       .then(res => res.json())
       .then(services => {
-        // console.log(services)
         setAllServices(services);
         setVisible(false);
+        let arr = []
+        services.forEach(service => {
+          arr.push(service.category);
+        })
+        const onlyUnique = (value, index, self) => {
+          return self.indexOf(value) === index;
+        }
+        const unique = arr.filter(onlyUnique);
+        setCategory(unique)
 
       })
       .catch(err => { console.log(err) })
@@ -95,9 +98,7 @@ const Home = () => {
   }, []);
 
   const handleSelectionOption = option => {
-    // console.log(option)
     const selectedCat = allServices.filter(item => item.category == option);
-    // console.log("selectedCat--->", selectedCat)
     setSelectedItems(selectedCat);
     setSearchResult(selectedCat);
 
@@ -105,8 +106,6 @@ const Home = () => {
     setShow(false);
     setSelected(true);
   };
-
-  // console.log(selectedItems)
 
   const renderItem = ({ item }) => <EachCard item={item} />;
   return (
@@ -135,8 +134,7 @@ const Home = () => {
                   onValueChange={newValue => handleSelectionOption(newValue)}
                   value={value}>
                   {
-                    options.map(option => {
-                      // console.log(option)
+                    category.map(option => {
                       return (
                         <Pressable key={option} style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                           <RadioButton value={option} />
@@ -153,9 +151,7 @@ const Home = () => {
         </Portal>
       </Provider>
 
-
       <View style={{ zIndex: -10, marginBottom: 150 }}>
-
         {allServices.length ?
           <FlatList
             refreshControl={
@@ -171,7 +167,17 @@ const Home = () => {
         <Provider>
           <Portal>
             <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
-              {!netStatus ? <Text style={{ justifyContent: 'center', alignItems: 'center', color: "red" }}>Network failed. Please connect your device to network</Text> : <><Text>Loading....Please wait.</Text><ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} /></>}
+              {
+                !netStatus ?
+                  <Text style={{ justifyContent: 'center', alignItems: 'center', color: "red" }}>
+                    Network failed. Please connect your device to network
+                  </Text>
+                  :
+                  <>
+                    <Text>Loading....Please wait.</Text>
+                    <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
+                  </>
+              }
             </Modal>
           </Portal>
         </Provider>
@@ -186,5 +192,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'red',
   },
-  containerStyle: { marginHorizontal: 30, borderRadius: 10, backgroundColor: 'white', padding: 20, zIndex: 99 },
+  containerStyle: {
+    marginHorizontal: 30,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    padding: 20,
+    zIndex: 99
+  },
 });

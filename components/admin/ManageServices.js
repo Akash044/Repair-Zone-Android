@@ -18,7 +18,6 @@ const wait = (timeout) => {
   })
 }
 
-
 const ManageServices = () => {
   const [loggedUser, setLoggedUser] = useContext(userContext);
   const [allServices, setAllServices] = useState([]);
@@ -26,8 +25,6 @@ const ManageServices = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [netStatus, setNetStatus] = useState(true);
   const { deleted } = loggedUser;
-
-  const containerStyle = { marginHorizontal: 30, borderRadius: 10, backgroundColor: 'white', padding: 20, zIndex: 99 };
 
   const onRefresh = () => {
     NetInfo.addEventListener(networkState => {
@@ -44,12 +41,7 @@ const ManageServices = () => {
         setAllServices(services);
         setVisible(false);
       })
-      .catch(err => {
-
-      })
-
-
-
+      .catch(err => { })
 
     wait(4000).then(() => {
       setRefreshing(false);
@@ -83,31 +75,51 @@ const ManageServices = () => {
 
 
   const renderItem = ({ item }) => <EachService item={item} />;
-  return (<>
-
-    <View>
-      {allServices.length ? <FlatList
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+  return (
+    <>
+      <View>
+        {
+          allServices.length ?
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              data={allServices}
+              renderItem={renderItem}
+              keyExtractor={item => item._id}
+            />
+            :
+            <Text style={{ fontSize: 30 }}>Empty service</Text>
         }
-        data={allServices}
-        renderItem={renderItem}
-        keyExtractor={item => item._id}
-      /> : <Text style={{ fontSize: 30 }}>Empty service</Text>
-      }
 
-    </View>
-    <Provider>
-      <Portal>
-        <Modal visible={visible} contentContainerStyle={containerStyle}>
-          {!netStatus ? <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text> : <><Text>Loading....Please wait.</Text><ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} /></>}
-        </Modal>
-      </Portal>
-    </Provider>
-  </>
+      </View>
+      <Provider>
+        <Portal>
+          <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
+            {
+              !netStatus ?
+                <Text style={{ marginTop: 250, color: "red" }}>Network failed. Please connect your device to network</Text>
+                :
+                <>
+                  <Text>Loading....Please wait.</Text>
+                  <ActivityIndicator style={{ paddingTop: 10 }} animating={true} color={Colors.red800} />
+                </>
+            }
+          </Modal>
+        </Portal>
+      </Provider>
+    </>
   );
 };
 
 export default ManageServices
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  containerStyle: {
+    marginHorizontal: 30,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    padding: 20,
+    zIndex: 99
+  }
+})

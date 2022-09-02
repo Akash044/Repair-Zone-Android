@@ -41,7 +41,7 @@ const EachService = (props) => {
                 data && alert('Service deleted successfully');
                 setLoggedUser({ ...loggedUser, deleted: serviceID });
             })
-            .catch(err => { alert({ err }, 'Error updating room info.Try again later') })
+            .catch(err => { alert({ err }, 'Error updating service info.Try again later') })
     };
 
     const handleUpdateServiceModalBtn = () => {

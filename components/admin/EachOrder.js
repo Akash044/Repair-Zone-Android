@@ -1,6 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { Pressable } from 'react-native'
+import { TouchableRipple } from 'react-native-paper'
 
 const statusData = ["pending", "processing", "completed"]
 
@@ -8,23 +9,26 @@ const EachOrder = (props) => {
     console.log(props.order)
     const { name, email, address, bkashNumber, mobile, status, trxID, _id, paymentMethod, items } = props.order
     const [updatedStatus, setUpdatedStatus] = useState(status)
-    const [isSelected, setIsSelected] = useState(false)
+    // const [isSelected, setIsSelected] = useState(false)
     const [visible, setVisible] = useState(false);
 
     const handleStatus = (status) => {
         console.log(status)
-        setUpdatedStatus(status)
+
         setVisible(true);
         fetch('http://localhost:8085/updateStatus', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: status, _id: _id })
+            body: JSON.stringify({ status: status, _id: _id, email: email })
         })
             .then(res => res.json())
             .then(data => {
                 setVisible(false);
                 data && alert('Status updated successfully');
+                !data && alert('Error updating status. Try again later')
+                data && setUpdatedStatus(status)
             }).catch(err => {
+                setVisible(false);
                 alert('Error updating status. Try again later')
             })
     }
@@ -54,9 +58,9 @@ const EachOrder = (props) => {
                     statusData.map((status) => {
                         if (status === updatedStatus) {
                             return (
-                                <Pressable key={status} onPress={() => handleStatus(status)}>
+                                <TouchableRipple rippleColor="rgba(0, 0, 0, .32)" key={status} onPress={() => handleStatus(status)}>
                                     <Text style={{ backgroundColor: "green", color: "white", borderRadius: 20, padding: 8 }}>{status}</Text>
-                                </Pressable>
+                                </TouchableRipple>
                             )
                         } else {
 

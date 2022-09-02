@@ -10,8 +10,8 @@ const ShowAllOrders = () => {
   const [visible, setVisible] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loggedUser, setLoggedUser] = useContext(userContext);
-  // const [count, setCount] = useState(0)
-  console.log(loggedUser)
+
+  // console.log(loggedUser)
   const onRefresh = () => {
     NetInfo.addEventListener(networkState => {
       setNetStatus(networkState.isConnected)
@@ -72,13 +72,13 @@ const ShowAllOrders = () => {
         <Text>Ordered Services:</Text>
 
         {
-          items.map(item => <Text key={item._id}>{++i}. {item.name}</Text>)
+          items.map(item => <Text key={item._id}>{++i}. {item.title}</Text>)
         }
       </View>
     )
   };
   return (<>
-    <View>
+    <View style={{ marginBottom: 60 }}>
       {allOrders.length ?
         <FlatList
           refreshControl={

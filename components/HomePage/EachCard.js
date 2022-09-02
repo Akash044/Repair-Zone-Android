@@ -13,7 +13,7 @@ const EachCard = (props) => {
         const newData = { ...data, expert: expert }
         setCartItems({ ...cartItems, items: [newData, ...cartItems.items] })
     }
-    const [expert, setExpert] = useState('')
+    const [expert, setExpert] = useState('Name1')
     const handleSelectExpert = (data) => {
         setExpert(data)
     }

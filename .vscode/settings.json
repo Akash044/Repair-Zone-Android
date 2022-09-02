@@ -1,3 +1,4 @@
 {
-    "editor.defaultFormatter": "dsznajder.es7-react-js-snippets"
+    "editor.defaultFormatter": "dsznajder.es7-react-js-snippets",
+    "git.ignoreLimitWarning": true
 }

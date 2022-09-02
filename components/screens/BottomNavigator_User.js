@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import ShowAllOrders from '../user/ShowAllOrders';
 import Profile from '../user/Profile';
@@ -7,15 +7,13 @@ import { BottomNavigation } from 'react-native-paper';
 const BottomNavigator_User = () => {
     const [index, setIndex] = useState(0);
     const [routes] = useState([
-        { key: 'orders', title: 'Orders', icon: 'order-alphabetical-ascending', color:"#795548" },
-        { key: 'profile', title: 'Profile', icon: 'account', color:"#607D8B" },
-        // { key: 'manageOrders', title: 'Manage Orders', icon: 'plus-minus',color:"#3F51B5" },
+        { key: 'orders', title: 'Orders', icon: 'order-alphabetical-ascending', color: "#795548" },
+        { key: 'profile', title: 'Profile', icon: 'account', color: "#607D8B" },
     ]);
 
     const renderScene = BottomNavigation.SceneMap({
         orders: ShowAllOrders,
         profile: Profile,
-        // manageOrders: ManageOrders,
     });
     return (
         <BottomNavigation
