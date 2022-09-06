@@ -59,7 +59,9 @@ const Home = () => {
           return self.indexOf(value) === index;
         }
         const unique = arr.filter(onlyUnique);
-        setCategory(unique)
+        const cats = [...unique, 'All'];
+        // console.log(unique)
+        setCategory(cats)
       })
       .catch(err => { })
 
@@ -90,7 +92,9 @@ const Home = () => {
           return self.indexOf(value) === index;
         }
         const unique = arr.filter(onlyUnique);
-        setCategory(unique)
+        const cats = [...unique, 'All'];
+        // console.log(unique)
+        setCategory(cats)
 
       })
       .catch(err => { console.log(err) })
@@ -98,9 +102,16 @@ const Home = () => {
   }, []);
 
   const handleSelectionOption = option => {
-    const selectedCat = allServices.filter(item => item.category == option);
-    setSelectedItems(selectedCat);
-    setSearchResult(selectedCat);
+
+    if (option === 'All') {
+      setSearchResult(allServices);
+      setSelectedItems(allServices);
+    } else {
+      const selectedCat = allServices.filter(item => item.category == option);
+      setSelectedItems(selectedCat);
+      setSearchResult(selectedCat);
+    }
+
 
     setValue(option);
     setShow(false);

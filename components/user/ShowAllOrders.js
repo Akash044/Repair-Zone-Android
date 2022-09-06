@@ -52,7 +52,7 @@ const ShowAllOrders = () => {
 
   const renderItem = ({ item }) => {
     console.log("jaklfjas-->", item)
-    const { name, email, address, mobile, paymentMethod, status, items } = item;
+    const { name, email, address, mobile, paymentMethod, status, items, orderDate } = item;
     let i = 0;
     return (
       <View style={styles.orderCard}>
@@ -68,6 +68,7 @@ const ShowAllOrders = () => {
           </>
         }
         <Text>Status:{status}</Text>
+        <Text>Order date:{orderDate}</Text>
         <Text></Text>
         <Text>Ordered Services:</Text>
 
@@ -87,7 +88,7 @@ const ShowAllOrders = () => {
           data={allOrders}
           renderItem={renderItem}
           keyExtractor={item => item._id}
-        /> : <Text style={{ fontSize: 30 }}>Empty room</Text>
+        /> : <Text style={{ fontSize: 30 }}>Empty orders</Text>
       }
     </View>
     <Provider>

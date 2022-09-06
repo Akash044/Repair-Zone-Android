@@ -62,7 +62,7 @@ const Cart = ({ navigation }) => {
 
                 <DataTable.Row key={index} style={{ marginVertical: 16 }}>
                   <DataTable.Cell>{index + 1}</DataTable.Cell>
-                  <DataTable.Cell style={{ marginRight: 8 }}>{item.title}</DataTable.Cell>
+                  <DataTable.Cell style={{ marginHorizontal: 16 }}>{item.title}</DataTable.Cell>
                   <DataTable.Cell numeric>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <TouchableRipple

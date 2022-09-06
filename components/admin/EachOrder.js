@@ -46,9 +46,9 @@ const EachOrder = (props) => {
                     <Text >Trx ID: {trxID}</Text>
                 </>
             }
-            <Text style={{ marginTop: 8 }}>Ordered Items:</Text>
+            <Text style={{ marginTop: 8 }}>Ordered Services:</Text>
             {
-                items.map(item => <Text key={item.name}>{item.name} </Text>)
+                items.map(item => <Text key={item.title}>{item.title} </Text>)
 
             }
             <Text style={{ marginTop: 8 }}>Status:</Text>

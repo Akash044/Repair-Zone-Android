@@ -25,7 +25,7 @@ const EachCard = (props) => {
                 <Title>{title}</Title>
                 <Paragraph style={{ color: 'black' }}>{cause}</Paragraph>
             </Card.Content>
-            <Card.Title title={`Repair cost: ${price}$`} />
+            <Card.Title title={`Repair cost: $${price}`} />
             <Card.Title title={`Select Expert:`} />
             <RadioButton.Group
                 onValueChange={newValue => handleSelectExpert(newValue)}
@@ -90,7 +90,7 @@ const EachCard = (props) => {
             </RadioButton.Group >
             <Card.Actions>
                 <Button onPress={() => handleAddToCart(props.item)}>Add to Cart</Button>
-                <Button>Order now</Button>
+                {/* <Button>Order now</Button> */}
             </Card.Actions>
         </Card>
     )

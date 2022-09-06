@@ -1,22 +1,22 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useContext } from 'react'
 import { userContext } from '../../App';
+import { Card, Title, Paragraph } from 'react-native-paper';
 
 const Profile = () => {
   const [loggedUser, setLoggedUser] = useContext(userContext);
-  const { name, email, img, contentType } = loggedUser
+  const { name, email, address, contact, img, contentType } = loggedUser
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View>
-        <Image
-          source={{
-            uri: `data:${contentType};base64,${img}`,
-          }}
-        />
-      </View>
-      <Text>{name}</Text>
-      <Text>{email}</Text>
-    </View>
+    <Card style={{ margin: 5 }}>
+      <Card.Cover source={{ uri: `data:${contentType};base64,${img}` }} />
+      <Card.Content>
+        <Title>Name: {name}</Title>
+        <Paragraph style={{ color: 'black' }}>Email: {email}</Paragraph>
+      </Card.Content>
+      <Card.Title title={`Address: ${address}`} />
+      <Card.Title title={`Mobile: ${contact}`} />
+
+    </Card>
   )
 }
 
